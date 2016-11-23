@@ -4,99 +4,60 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
-
+import com.sina.weibo.sdk.utils.UIUtils;
 
 
 /**
  * Created by Administrator on 2016/11/22.
  */
 public class LoginActivity extends Activity {
-
-    private static final String TAG = "weibosdk";
-
-    /** 显示认证后的信息，如 AccessToken */
-    private TextView mTokenText;
-
+    private Button loginBtn;
+    private SsoHandler mSsoHandler;
+    private Oauth2AccessToken mAccessToken;
     private AuthInfo mAuthInfo;
 
-    /** 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能  */
-    private Oauth2AccessToken mAccessToken;
-
-    /** 注意：SsoHandler 仅当 SDK 支持 SSO 时有效 */
-    private SsoHandler mSsoHandler;
-
-    /**
-     * @see {@link Activity#onCreate}
-     */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
-        // 创建微博实例
-        //mWeiboAuth = new WeiboAuth(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
-        // 快速授权时，请不要传入 SCOPE，否则可能会授权不成功
+        loginBtn = (Button) findViewById(R.id.login_btn);
+
+
         mAuthInfo = new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
+        Log.i("mAuthInfo", "" + mAuthInfo.getAuthBundle());
+        mSsoHandler = new SsoHandler(LoginActivity.this, mAuthInfo);
 
-
-        // SSO 授权, 仅客户端
-        findViewById(R.id.login_btn).setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                mSsoHandler = new SsoHandler(LoginActivity.this, mAuthInfo);
-                mSsoHandler.authorizeClientSso(new AuthListener());
+            public void onClick(View view) {
+                    mSsoHandler.authorize(new AuthListener());
             }
         });
-
-
     }
 
-    /**
-     * 当 SSO 授权 Activity 退出时，该函数被调用。
-     *
-     * @see {@link Activity#onActivityResult}
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // SSO 授权回调
-        // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResults
-        if (mSsoHandler != null) {
-            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-        }
-
-    }
-
-    /**
-     * 微博认证授权回调类。
-     * 1. SSO 授权时，需要在 {@link #onActivityResult} 中调用 {@link SsoHandler#authorizeCallBack} 后，
-     *    该回调才会被执行。
-     * 2. 非 SSO 授权时，当授权结束后，该回调就会被执行。
-     * 当授权成功后，请保存该 access_token、expires_in、uid 等信息到 SharedPreferences 中。
-     */
     class AuthListener implements WeiboAuthListener {
 
-        @Override
         public void onComplete(Bundle values) {
             // 从 Bundle 中解析 Token
             mAccessToken = Oauth2AccessToken.parseAccessToken(values);
             //从这里获取用户输入的 电话号码信息
             String  phoneNum =  mAccessToken.getPhoneNum();
             if (mAccessToken.isSessionValid()) {
+
                 // 保存 Token 到 SharedPreferences
                 AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
+                Intent intent=new Intent(LoginActivity.this,HomePageActivity.class);
+                startActivity(intent);
                 Toast.makeText(LoginActivity.this,
                         "授权成功", Toast.LENGTH_SHORT).show();
             } else {
@@ -121,8 +82,25 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onWeiboException(WeiboException e) {
-            Toast.makeText(LoginActivity.this,
-                    "Auth exception : " + e.getMessage(), Toast.LENGTH_LONG).show();
+            UIUtils.showToast(LoginActivity.this,
+                    "Auth exception : " + e.getMessage(), Toast.LENGTH_LONG);
         }
+    }
+
+    /**
+     * 当 SSO 授权 Activity 退出时，该函数被调用。
+     *
+     * @see {@link Activity#onActivityResult}
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            Log.i("requestCode====",""+requestCode+"resultCode=="+""+resultCode);
+        // SSO 授权回调
+        // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResults
+        if (mSsoHandler != null) {
+            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
+
     }
 }
