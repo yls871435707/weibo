@@ -51,12 +51,16 @@ public class MyAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHondler viewHondler=null;
         if (view==null){
-            view=layoutInflater.inflate(R.layout.activity_homepage,null);
+            view=layoutInflater.inflate(R.layout.listview_homepage_item,null);
             viewHondler=new ViewHondler();
-            viewHondler.created_at= (TextView) view.findViewById(R.id.tv_time);
-            viewHondler.text= (TextView) view.findViewById(R.id.tv_cotent);
-            viewHondler.soure= (TextView) view.findViewById(R.id.tv_description);
-            viewHondler.original_pic= (ImageView) view.findViewById(R.id.iv_image);
+            viewHondler.created_at= (TextView) view.findViewById(R.id.tv_created_at);
+            viewHondler.text= (TextView) view.findViewById(R.id.tv_text);
+            viewHondler.source= (TextView) view.findViewById(R.id.tv_source);
+//            viewHondler.followers_count= (TextView) view.findViewById(R.id.tv_followers_count);
+//            viewHondler.friends_count= (TextView) view.findViewById(R.id.tv_friends_count);
+//            viewHondler.statuses_count= (TextView) view.findViewById(R.id.tv_statuses_count);
+//            viewHondler.screen_name= (TextView) view.findViewById(R.id.tv_screen_name);
+//            viewHondler.profile_image_url= (ImageView) view.findViewById(R.id.iv_profile_image_url);
             view.setTag(viewHondler);
         } else {
             viewHondler= (ViewHondler) view.getTag();
@@ -64,12 +68,20 @@ public class MyAdapter extends BaseAdapter {
         WeiBoGet weiBoGet=lists.get(i);
         viewHondler.created_at.setText(weiBoGet.getCreated_at());
         viewHondler.text.setText(weiBoGet.getText());
-        viewHondler.soure.setText(weiBoGet.getSource());
+        viewHondler.source.setText(weiBoGet.getSource());
+//        viewHondler.statuses_count.setText(weiBoGet.getStatuses_count());
+//        viewHondler.friends_count.setText(weiBoGet.getFriends_count());
+//        viewHondler.followers_count.setText(weiBoGet.getFollowers_count());
+//        viewHondler.screen_name.setText(weiBoGet.getScreen_name());
+
+
+
+
         MyHandler myHandler=new MyHandler();
         myHandler.setViewHondler(viewHondler);
         MyThread myThread=new MyThread();
         myThread.setMyHandler(myHandler);
-        myThread.setIamgeURL(weiBoGet.getOriginal_pic());
+        myThread.setIamgeURL(weiBoGet.getProfile_image_url());
         myThread.start();
         return view;
     }
@@ -108,16 +120,19 @@ public class MyAdapter extends BaseAdapter {
         }
         public void handleMessage(Message message){
             if(bitmap!=null){
-                viewHondler.original_pic.setImageBitmap(bitmap);
+                viewHondler.profile_image_url.setImageBitmap(bitmap);
             }
         }
     }
     class ViewHondler{
         TextView created_at;
         TextView text;
-        TextView soure;
-        ImageView original_pic;
-
+        TextView source;
+        TextView screen_name;
+        ImageView profile_image_url;
+        TextView followers_count;
+        TextView friends_count;
+        TextView statuses_count;
     }
 
 }

@@ -6,7 +6,7 @@
     android:background="@mipmap/splash_background"
     tools:context="com.yls.weibodemo.MainActivity">
     <ImageView
-        android:id="@+id/iv_imageview"
+        android:id="@+id/iv_imageview1"
         android:src="@mipmap/splash_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +33,7 @@ import java.util.ArrayList;
  * Created by Administrator on 2016/11/23.
  */
 public class HomePageActivity extends Activity {
-    Button button;
+Button button;
     private ListView listView;
     ArrayList<WeiBoGet> lists=new ArrayList<WeiBoGet>();
 
@@ -39,48 +42,18 @@ public class HomePageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         listView = (ListView) findViewById(R.id.listview);
-        button = (Button) findViewById(R.id.add_btn);
+        button= (Button) findViewById(R.id.add_btn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                addweibo();
+            public void onClick(View v) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        addweibo();
+                    }
+                }.start();
             }
         });
-
-    }
-
-    public void addtu() {
-        // 1. 获取要发送的图片
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_com_sina_weibo_sdk_logo);
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(this);
-        // 2. 调用接口发送微博
-        WeiboParameters params = new WeiboParameters(Constants.APP_KEY);
-        params.put("access_token", accessToken.getToken());
-        params.put("status", "通过API发送微博-upload");
-        params.put("visible", "0");
-        params.put("list_id", "");
-        params.put("pic", bitmap);
-        params.put("lat", "14.5");
-        params.put("long", "23.0");
-        params.put("annotations", "");
-        RequestListener listener = new RequestListener() {
-            @Override
-            public void onComplete(String s) {
-                Log.i("onComplete", "" + s);
-            }
-
-            @Override
-            public void onWeiboException(WeiboException e) {
-
-            }
-        };
-        AsyncWeiboRunner asyncWeiboRunner = new AsyncWeiboRunner(this);
-        asyncWeiboRunner.requestAsync(
-                "https://api.weibo.com/2/statuses/upload.json",
-                params,
-                "POST",
-                listener);
     }
 
 
@@ -89,6 +62,7 @@ public class HomePageActivity extends Activity {
         // 2. 调用接口
         WeiboParameters params = new WeiboParameters(Constants.APP_KEY);
         params.put("access_token", accessToken.getToken());
+
         RequestListener listener = new RequestListener() {
             @Override
             public void onComplete(String s) {
@@ -96,21 +70,28 @@ public class HomePageActivity extends Activity {
                 try {
                     JSONObject jsonObject= null;
                     jsonObject = new JSONObject(s);
-                     Log.i("JSONObject",jsonObject.optString("msg"));
+                     Log.i("JSONObject",jsonObject.optString("statuses"));
                     JSONArray jsonArray=jsonObject.getJSONArray("statuses");
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject obj=jsonArray.getJSONObject(i);
                         WeiBoGet weiBoGet=new WeiBoGet();
                         weiBoGet.setCreated_at(obj.getString("created_at"));
                         weiBoGet.setText(obj.getString("text"));
-                        weiBoGet.setSource(obj.getString("soure"));
-                        weiBoGet.setOriginal_pic(obj.getString("original_pic"));
+                        weiBoGet.setSource(obj.getString("source"));
                         lists.add(weiBoGet);
-                        MyAdapter myAdapter=new MyAdapter(HomePageActivity.this,lists);
-                        listView.setAdapter(myAdapter);
+//                        JSONArray array=obj.getJSONArray("user");
+//                        for(int j=0;j<obj.length();j++){
+//                            JSONObject object=array.getJSONObject(j);
+//                            weiBoGet.setScreen_name(object.getString("screen_name"));
+//                            weiBoGet.setProfile_image_url(object.getString("profile_image_url"));
+//                            weiBoGet.setStatuses_count(object.getInt("statuses_count"));
+//                            weiBoGet.setFollowers_count(object.getInt("followers_count"));
+//                            weiBoGet.setFriends_count(object.getInt("friends_count"));
+//                            lists.add(weiBoGet);
+//                        }
+
+                        handler.sendEmptyMessage(0);
                     }
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -128,5 +109,12 @@ public class HomePageActivity extends Activity {
                 "GET",
                 listener);
     }
-
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            MyAdapter myAdapter=new MyAdapter(HomePageActivity.this,lists);
+            listView.setAdapter(myAdapter);
+        }
+    };
 }

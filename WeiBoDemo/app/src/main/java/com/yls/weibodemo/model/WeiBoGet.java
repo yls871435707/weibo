@@ -5,21 +5,62 @@ package com.yls.weibodemo.model;
  * Created by Administrator on 2016/11/23.
  */
 public class WeiBoGet {
+//    created_at	string	微博创建时间
+//    text	string	微博信息内容
+//    source	string	微博来源
     String created_at;
-    int id;
-    int mid;
-    String idstr;
     String text;
     String source;
-    boolean favorited;
-    boolean truncated;
-    String original_pic;
-    Object geo;
-    Object user;
-    Object retweeted_stats;
-    int reposts_count;
-    int comments_count;
-    int attitudes_count;
+//    screen_name	string	用户昵称
+//    profile_image_url	string	用户头像地址（中图），50×50像素
+    String screen_name;
+    String profile_image_url;
+    //    reposts_count	int	转发数
+//    comments_count	int	评论数
+//    attitudes_count	int	表态数
+    int followers_count;
+    int friends_count;
+    int statuses_count;
+
+    public String getScreen_name() {
+        return screen_name;
+    }
+
+    public void setScreen_name(String screen_name) {
+        this.screen_name = screen_name;
+    }
+
+    public String getProfile_image_url() {
+        return profile_image_url;
+    }
+
+    public void setProfile_image_url(String profile_image_url) {
+        this.profile_image_url = profile_image_url;
+    }
+
+    public int getFollowers_count() {
+        return followers_count;
+    }
+
+    public void setFollowers_count(int followers_count) {
+        this.followers_count = followers_count;
+    }
+
+    public int getFriends_count() {
+        return friends_count;
+    }
+
+    public void setFriends_count(int friends_count) {
+        this.friends_count = friends_count;
+    }
+
+    public int getStatuses_count() {
+        return statuses_count;
+    }
+
+    public void setStatuses_count(int statuses_count) {
+        this.statuses_count = statuses_count;
+    }
 
     public String getCreated_at() {
         return created_at;
@@ -27,30 +68,6 @@ public class WeiBoGet {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getMid() {
-        return mid;
-    }
-
-    public void setMid(int mid) {
-        this.mid = mid;
-    }
-
-    public String getIdstr() {
-        return idstr;
-    }
-
-    public void setIdstr(String idstr) {
-        this.idstr = idstr;
     }
 
     public String getText() {
@@ -69,75 +86,5 @@ public class WeiBoGet {
         this.source = source;
     }
 
-    public boolean isFavorited() {
-        return favorited;
-    }
 
-    public void setFavorited(boolean favorited) {
-        this.favorited = favorited;
-    }
-
-    public boolean isTruncated() {
-        return truncated;
-    }
-
-    public void setTruncated(boolean truncated) {
-        this.truncated = truncated;
-    }
-
-    public String getOriginal_pic() {
-        return original_pic;
-    }
-
-    public void setOriginal_pic(String original_pic) {
-        this.original_pic = original_pic;
-    }
-
-    public Object getGeo() {
-        return geo;
-    }
-
-    public void setGeo(Object geo) {
-        this.geo = geo;
-    }
-
-    public Object getUser() {
-        return user;
-    }
-
-    public void setUser(Object user) {
-        this.user = user;
-    }
-
-    public Object getRetweeted_stats() {
-        return retweeted_stats;
-    }
-
-    public void setRetweeted_stats(Object retweeted_stats) {
-        this.retweeted_stats = retweeted_stats;
-    }
-
-    public int getReposts_count() {
-        return reposts_count;
-    }
-
-    public void setReposts_count(int reposts_count) {
-        this.reposts_count = reposts_count;
-    }
-
-    public int getComments_count() {
-        return comments_count;
-    }
-
-    public void setComments_count(int comments_count) {
-        this.comments_count = comments_count;
-    }
-
-    public int getAttitudes_count() {
-        return attitudes_count;
-    }
-
-    public void setAttitudes_count(int attitudes_count) {
-        this.attitudes_count = attitudes_count;
-    }
 }
