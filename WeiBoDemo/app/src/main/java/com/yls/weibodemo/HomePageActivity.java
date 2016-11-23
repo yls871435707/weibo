@@ -33,7 +33,6 @@ import java.util.ArrayList;
  * Created by Administrator on 2016/11/23.
  */
 public class HomePageActivity extends Activity {
-Button button;
     private ListView listView;
     ArrayList<WeiBoGet> lists=new ArrayList<WeiBoGet>();
 
@@ -42,18 +41,16 @@ Button button;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         listView = (ListView) findViewById(R.id.listview);
-        button= (Button) findViewById(R.id.add_btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+
+
                 new Thread(){
                     @Override
                     public void run() {
                         addweibo();
                     }
                 }.start();
-            }
-        });
+
     }
 
 
