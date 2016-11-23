@@ -3,41 +3,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<ListView
-    android:id="@+id/listview"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
 
-</ListView>
-    <RadioGroup
-        android:orientation="horizontal"
+    <Button
+        android:id="@+id/add_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:text="添加图片" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </ListView>
+
+    <RadioGroup
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <RadioButton
-            android:text="首页"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:text="首页" />
+
         <RadioButton
-            android:text="首页"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:text="首页" />
+
         <RadioButton
-            android:text="首页"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:text="首页" />
+
         <RadioButton
-            android:text="首页"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:text="首页" />
+
         <RadioButton
-            android:text="首页"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:text="首页" />
     </RadioGroup>
 </LinearLayout>
